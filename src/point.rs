@@ -3,7 +3,7 @@ use crate::error::PointError;
 
 type Result<T> = std::result::Result<T, PointError>;
 
-#[derive(PartialEq, Debug, Clone, Copy)]
+#[derive(PartialEq, Debug, Clone, Copy, PartialOrd)]
 pub struct Point {
     pub coord_x: f64,
     pub coord_y: f64,

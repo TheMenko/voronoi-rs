@@ -5,14 +5,16 @@ use std::error::Error as StdError;
 #[derive(Debug)]
 pub enum PlaneError {
     TooFewPoints,
-    PointsNotProvided
+    PointsNotProvided,
+    SortedIncorrectly,
 }
 
 impl From<PlaneError> for String {
     fn from(e: PlaneError) -> String {
         match e {
             PlaneError::TooFewPoints => "too few points provided. set more then one point".to_string(),
-            PlaneError::PointsNotProvided => "plane has empty points field. set points using with_points(<points>)".to_string()
+            PlaneError::PointsNotProvided => "plane has empty points field. set points using with_points(<points>)".to_string(),
+            PlaneError::SortedIncorrectly => "sorted incorrectly".to_string()
         }
     }
 }
@@ -22,6 +24,7 @@ impl fmt::Display for PlaneError {
         match *self {
             PlaneError::TooFewPoints => f.write_str("too few points provided. set more then one point"),
             PlaneError::PointsNotProvided => f.write_str("plane has empty points field. set points using with_points(<points>)"),
+            PlaneError::SortedIncorrectly => f.write_str("sorted incorrectly")
         }
     }
 }
@@ -31,6 +34,7 @@ impl StdError for PlaneError {
         match *self {
             PlaneError::TooFewPoints => "too few points provided. set more then one point",
             PlaneError::PointsNotProvided => "plane has empty points field. set points using with_points(<points>)",
+            PlaneError::SortedIncorrectly => "sorted incorrectly"
         }
     }
 }

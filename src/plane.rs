@@ -3,7 +3,7 @@ use crate::error::PlaneError;
 
 type Result<T> = std::result::Result<T, PlaneError>;
 
-#[derive(Debug, Clone)]
+#[derive(Debug, Clone, PartialEq, PartialOrd)]
 pub struct Plane {
     width: u32,
     height: u32,
@@ -26,7 +26,7 @@ impl Plane {
         Ok(self)
     }
     
-    pub fn get_subsets(&self) -> Result<(Vec<Point>, Vec<Point>)> {
+    pub fn get_subsets_vertical(&self) -> Result<(Vec<Point>, Vec<Point>)> {
         if let Some(point) = self.points.clone() {
             let (left, right): (Vec<Point>, Vec<Point>) = point.into_iter().partition(|p| p.coord_x <= (self.width / 2) as f64);
             
@@ -35,10 +35,24 @@ impl Plane {
             Err(PlaneError::PointsNotProvided)
         }
     }
+    pub fn get_subsets_horizontal(&self) -> Result<(Vec<Point>, Vec<Point>)> {
+        if let Some(point) = self.points.clone() {
+            let (left, right): (Vec<Point>, Vec<Point>) = point.into_iter().partition(|p| p.coord_y <= (self.height / 2) as f64);
+            
+            Ok((left, right))
+        } else {
+            Err(PlaneError::PointsNotProvided)
+        }
+    }
+    pub fn sort_by_apsci(&mut self) {
+        self.points.as_mut().unwrap().sort_by(|a,b| { a.partial_cmp(b).unwrap() });
+    }
 }
 
 #[cfg(test)]
 mod tests {
+    use crate::error::PlaneError;
+
     use super::{Point, Plane};
     
     #[test]
@@ -56,10 +70,29 @@ mod tests {
         let mut plane: Plane = Plane::new(10, 10);
         let plane = plane.with_points(points)?;
         
-        let (left, right) = plane.get_subsets()?;
+        let (left, right) = plane.clone().get_subsets_vertical()?;
+        let (top, bottom) = plane.get_subsets_horizontal()?;
         
         assert_eq!(left, vec![Point { coord_x: 4., coord_y: 4. }, Point { coord_x: 3., coord_y: 3. }]);
         assert_eq!(right, vec![Point { coord_x: 7., coord_y: 8. }]);
+        assert_eq!(top, vec![Point { coord_x: 4., coord_y: 4. }, Point { coord_x: 3., coord_y: 3. }]);
+        assert_eq!(bottom, vec![Point { coord_x: 7., coord_y: 8. }]);
         Ok(())
+    }
+    
+    #[test]
+    fn test_sort() -> Result<(), String> {
+        let points: Vec<Point> = Point::from_vec(vec![(4.,4.), (3.,3.), (7.,8.), (2.,1.), (2.,9.)]).unwrap();
+        let mut plane: Plane = Plane::new(10, 10);
+        plane.with_points(points)?;
+        plane.sort_by_apsci();
+        
+        let closest = Point { coord_x: 2., coord_y: 1. };
+        
+        if plane.points.unwrap().into_iter().nth(0).unwrap() == closest {
+            Ok(())
+        } else {
+            Err(PlaneError::SortedIncorrectly.into())
+        }
     }
 }
