@@ -67,3 +67,32 @@ impl StdError for PointError {
         }
     }
 }
+
+#[derive(Debug)]
+pub enum VoronoiError {
+    Error(String, String)
+}
+
+impl From<VoronoiError> for String {
+    fn from(e: VoronoiError) -> String {
+        match e {
+            VoronoiError::Error(message, other) => format!("{}. {}", message, other),
+        }
+    }
+}
+
+impl fmt::Display for VoronoiError {  
+    fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
+        match *self {
+            VoronoiError::Error(message, other) => f.write_str(&format!("{}. {}", message, other)),
+        }
+    }
+}
+
+impl StdError for VoronoiError {  
+    fn description(&self) -> &str {
+        match *self {
+            VoronoiError::Error(message, other) => &format!("{}. {}", message, other),
+        }
+    }
+}

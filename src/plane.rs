@@ -18,12 +18,12 @@ impl Plane {
             points: None,
         }
     }
-    pub fn with_points(&mut self, points: Vec<Point>) -> Result<&Plane> {
+    pub fn with_points(&mut self, points: Vec<Point>) -> Result<()> {
         if points.len() < 2 {
             return Err(PlaneError::TooFewPoints)
         }
         self.points = Some(points);
-        Ok(self)
+        Ok(())
     }
     
     pub fn get_subsets_vertical(&self) -> Result<(Vec<Point>, Vec<Point>)> {
@@ -68,7 +68,7 @@ mod tests {
     fn test_plane_subsets() -> Result<(), String> {
         let points: Vec<Point> = Point::from_vec(vec![(4.,4.), (3.,3.), (7.,8.)]).unwrap();
         let mut plane: Plane = Plane::new(10, 10);
-        let plane = plane.with_points(points)?;
+        plane.with_points(points)?;
         
         let (left, right) = plane.clone().get_subsets_vertical()?;
         let (top, bottom) = plane.get_subsets_horizontal()?;
