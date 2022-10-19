@@ -1,2 +1,3 @@
 # voronoi-rs
-Fortunes Algorithm Library
+DaC method
+O(n log(n))
