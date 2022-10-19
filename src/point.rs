@@ -12,6 +12,7 @@ impl Point {
         }
     }
     
+    // TODO: handle errors (in case vec is empty, we don't want to return empty Point of course)
     pub fn from_vec(tparr: Vec<(f64, f64)>) -> Vec<Point> {
         tparr.iter().map(|k| Point { coord_x: k.0, coord_y: k.1}).collect()
     }
