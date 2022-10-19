@@ -1,3 +1,8 @@
+
+use crate::error::PointError;
+
+type Result<T> = std::result::Result<T, PointError>;
+
 #[derive(PartialEq, Debug, Clone, Copy)]
 pub struct Point {
     pub coord_x: f64,
@@ -12,9 +17,11 @@ impl Point {
         }
     }
     
-    // TODO: handle errors (in case vec is empty, we don't want to return empty Point of course)
-    pub fn from_vec(tparr: Vec<(f64, f64)>) -> Vec<Point> {
-        tparr.iter().map(|k| Point { coord_x: k.0, coord_y: k.1}).collect()
+    pub fn from_vec(tparr: Vec<(f64, f64)>) -> Result<Vec<Point>> {
+        if tparr.len() == 0 {
+            return Err(PointError::Empty)
+        }
+        Ok(tparr.iter().map(|k| Point { coord_x: k.0, coord_y: k.1}).collect())
     }
 }
 
@@ -25,7 +32,7 @@ mod tests {
     #[test]
     fn float_points() {
         let nums = vec![(1.,2.), (3.,4.), (5.,6.)];
-        let points: Vec<Point> = Point::from_vec(nums);
+        let points: Vec<Point> = Point::from_vec(nums).unwrap();
         assert_eq!(points, vec![Point{ coord_x: 1., coord_y: 2. }, Point{ coord_x: 3., coord_y: 4. }, Point{ coord_x: 5., coord_y: 6. }]);
     }
 }

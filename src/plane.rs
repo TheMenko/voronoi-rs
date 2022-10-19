@@ -39,22 +39,20 @@ impl Plane {
 
 #[cfg(test)]
 mod tests {
-    use std::str::FromStr;
-
     use super::{Point, Plane};
     
     #[test]
     fn make_plane() -> Result<(), String> {
-        let points: Vec<Point> = Point::from_vec(vec![(1.,2.), (3.,4.), (5.,6.)]);
+        let points: Vec<Point> = Point::from_vec(vec![(1.,2.), (3.,4.), (5.,6.)]).unwrap();
         match Plane::new(10, 10).with_points(points) {
             Ok(_) => { Ok(()) }
-            Err(e) => { Err(String::from_str(e.into()).unwrap()) }
+            Err(e) => { Err(e.to_string()) }
         }
     }
     
     #[test]
     fn test_plane_subsets() -> Result<(), String> {
-        let points: Vec<Point> = Point::from_vec(vec![(4.,4.), (3.,3.), (7.,8.)]);
+        let points: Vec<Point> = Point::from_vec(vec![(4.,4.), (3.,3.), (7.,8.)]).unwrap();
         let mut plane: Plane = Plane::new(10, 10);
         let plane = plane.with_points(points).unwrap();
         
