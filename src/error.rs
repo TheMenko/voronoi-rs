@@ -8,6 +8,15 @@ pub enum PlaneError {
     PointsNotProvided
 }
 
+impl From<PlaneError> for String {
+    fn from(e: PlaneError) -> String {
+        match e {
+            PlaneError::TooFewPoints => "too few points provided. set more then one point".to_string(),
+            PlaneError::PointsNotProvided => "plane has empty points field. set points using with_points(<points>)".to_string()
+        }
+    }
+}
+
 impl fmt::Display for PlaneError {  
     fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
         match *self {
@@ -29,6 +38,14 @@ impl StdError for PlaneError {
 #[derive(Debug)]
 pub enum PointError {
     Empty
+}
+
+impl From<PointError> for String {
+    fn from(e: PointError) -> String {
+        match e {
+            PointError::Empty => "vec of points is empty or invalid".to_string(),
+        }
+    }
 }
 
 impl fmt::Display for PointError {  

@@ -54,9 +54,9 @@ mod tests {
     fn test_plane_subsets() -> Result<(), String> {
         let points: Vec<Point> = Point::from_vec(vec![(4.,4.), (3.,3.), (7.,8.)]).unwrap();
         let mut plane: Plane = Plane::new(10, 10);
-        let plane = plane.with_points(points).unwrap();
+        let plane = plane.with_points(points)?;
         
-        let (left, right) = plane.get_subsets().unwrap();
+        let (left, right) = plane.get_subsets()?;
         
         assert_eq!(left, vec![Point { coord_x: 4., coord_y: 4. }, Point { coord_x: 3., coord_y: 3. }]);
         assert_eq!(right, vec![Point { coord_x: 7., coord_y: 8. }]);

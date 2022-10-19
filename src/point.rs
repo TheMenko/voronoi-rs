@@ -30,9 +30,10 @@ mod tests {
     use super::Point;
     
     #[test]
-    fn float_points() {
+    fn float_points() -> Result<(), String> {
         let nums = vec![(1.,2.), (3.,4.), (5.,6.)];
-        let points: Vec<Point> = Point::from_vec(nums).unwrap();
+        let points: Vec<Point> = Point::from_vec(nums)?;
         assert_eq!(points, vec![Point{ coord_x: 1., coord_y: 2. }, Point{ coord_x: 3., coord_y: 4. }, Point{ coord_x: 5., coord_y: 6. }]);
+        Ok(())
     }
 }
