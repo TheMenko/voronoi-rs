@@ -71,14 +71,18 @@ impl StdError for PointError {
 #[derive(Debug)]
 pub enum VoronoiError {
     Error(String, String),
-    EmptyPlanePoints
+}
+
+impl From<PlaneError> for VoronoiError {
+    fn from(e: PlaneError) -> Self {
+        VoronoiError::Error(String::from("voronoi error: "), e.to_string())
+    }
 }
 
 impl From<VoronoiError> for String {
     fn from(e: VoronoiError) -> String {
         match e {
             VoronoiError::Error(message, other) => format!("{}. {}", message, other),
-            VoronoiError::EmptyPlanePoints => String::from("plane must have set points")
         }
     }
 }
@@ -87,7 +91,6 @@ impl fmt::Display for VoronoiError {
     fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
         match self {
             VoronoiError::Error(message, other) => f.write_str(&format!("{}. {}", message, other)),
-            VoronoiError::EmptyPlanePoints => f.write_str("plane must have set points")
         }
     }
 }
