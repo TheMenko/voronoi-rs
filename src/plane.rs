@@ -56,6 +56,10 @@ impl Plane {
     pub fn sort_by_apsci(&mut self) {
         self.points.as_mut().unwrap().sort_by(|a,b| { a.partial_cmp(b).unwrap() });
     }
+    #[allow(unused_variables)]
+    pub fn merge(&mut self, other: Plane) -> Result<Plane> {
+        Ok(Plane::new(0, 0))
+    }
 }
 
 #[cfg(test)]
