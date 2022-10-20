@@ -24,6 +24,10 @@ impl Point {
         Ok(tparr.iter().map(|k| Point { coord_x: k.0, coord_y: k.1}).collect())
     }
     
+    pub fn from_tpl(tpl: (f64, f64)) -> Point {
+        Point::new(tpl.0, tpl.1)
+    }
+    
     pub fn euclidean_dist(&self, other: Point) -> f64 {
         f64::sqrt(f64::powi(other.coord_x - self.coord_x, 2) + f64::powi(other.coord_y - self.coord_y, 2))
     }

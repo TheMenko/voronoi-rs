@@ -38,23 +38,25 @@ impl VoronoiBuilder {
     
     }
     
-    fn calc_for_edges(self, points: &Vec<Point>) -> Vec<(u8, Point)> {
+    fn calc_for_edges(self) -> Result<Vec<(u8, Point)>> {
+        
+        let points: Vec<Point> = match self.plane.points.clone() {
+            Some(p) => p,
+            None => { return Err(VoronoiError::EmptyPlanePoints) }
+        };
         
         let calc_dist_to_edge = |edge: Point, points: &Vec<Point>| -> Point {
             points.iter().reduce(|p,k| if p.euclidean_dist(edge) < k.euclidean_dist(edge) { p } else { k }).unwrap().to_owned()
         };
         
-        let corners = [
-            (Point::new(0., 0.), 1u8), 
-            (Point::new(self.plane.width as f64, 0.), 2u8), 
-            (Point::new(self.plane.width as f64, self.plane.height as f64), 3u8), 
-            (Point::new(self.plane.height as f64, 0.), 4u8)];
+        let corners = self.plane.get_corners();
             
-        let mut closest_points: Vec<(u8, Point)> = corners.par_iter().map(|i| (i.1, calc_dist_to_edge(i.0, points))).collect();
+        let mut closest_points: Vec<(u8, Point)> = corners.iter().map(|i| (i.1, calc_dist_to_edge(i.0, &points))).collect();
         
         //todo: if all corners are closest to the same point, its safe to draw out/mark sites in the plane.
         closest_points.sort_by(|k,p| k.0.partial_cmp(&p.0).unwrap());
-        closest_points
+        Ok(closest_points)
+        
     }
     
     pub fn build(&mut self) -> Result<Voronoi> {
@@ -72,3 +74,36 @@ impl VoronoiBuilder {
         Ok(Voronoi{})
     }
 }
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+    #[test]
+    fn test_calc_edges() -> Result<()> {
+        let points = vec![(1., 1.), (7., 3.), (6., 6.), (1., 9.)];
+        let vb = VoronoiBuilder::new(10, 10, points.clone())?;
+        
+        let closest_points = vb.calc_for_edges()?;
+        
+        // let a: Vec<()> = closest_points.iter().map(|p| println!("{:?}", p)).collect();
+        
+        // assert_eq!(closest_points.get(0).unwrap(), &(1u8, Point::from_tpl(points[0])));
+        // assert_eq!(closest_points.get(1).unwrap(), &(2u8, Point::from_tpl(points[1])));
+        // assert_eq!(closest_points.get(2).unwrap(), &(3u8, Point::from_tpl(points[2])));
+        assert_eq!(closest_points.get(3).unwrap(), &(4u8, Point::from_tpl(points[3])));
+        Ok(())
+    }  
+}
+
+/*
+* 0 0 0 0 0 0 0 0 0 0
+* 0 1 0 0 0 0 0 0 0 0
+* 0 0 0 0 0 0 0 0 0 0
+* 0 0 0 0 0 0 0 2 0 0
+* 0 0 0 0 0 0 0 0 0 0
+* 0 0 0 0 0 0 0 0 0 0
+* 0 0 0 0 0 0 3 0 0 0
+* 0 0 0 0 0 0 0 0 0 0
+* 0 0 0 0 0 0 0 0 0 0
+* 0 4 0 0 0 0 0 0 0 0
+*/

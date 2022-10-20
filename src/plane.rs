@@ -7,7 +7,7 @@ type Result<T> = std::result::Result<T, PlaneError>;
 pub struct Plane {
     pub width: u32,
     pub height: u32,
-    points: Option<Vec<Point>>
+    pub points: Option<Vec<Point>>
 }
 
 impl Plane {
@@ -24,6 +24,15 @@ impl Plane {
         }
         self.points = Some(points);
         Ok(())
+    }
+    
+    pub fn get_corners(&self) -> [(Point, u8); 4] {
+        [
+            (Point::new(0., 0.), 1u8), 
+            (Point::new(self.width as f64, 0.), 2u8), 
+            (Point::new(self.width as f64, self.height as f64), 3u8), 
+            (Point::new(0., self.height as f64), 4u8)
+        ]
     }
     
     pub fn get_subsets_vertical(&self) -> Result<(Vec<Point>, Vec<Point>)> {
