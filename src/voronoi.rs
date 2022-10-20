@@ -40,8 +40,8 @@ impl VoronoiBuilder {
     
     fn calc_for_edges(self, points: &Vec<Point>) -> Vec<(u8, Point)> {
         
-        let calc_dist_for_edge = |edge: Point, points: &Vec<Point>| -> Point {
-            Point::new(0., 0.)
+        let calc_dist_to_edge = |edge: Point, points: &Vec<Point>| -> Point {
+            points.iter().reduce(|p,k| if p.euclidean_dist(edge) < k.euclidean_dist(edge) { p } else { k }).unwrap().to_owned()
         };
         
         //let p = points.clone();
@@ -51,7 +51,7 @@ impl VoronoiBuilder {
             (Point::new(self.plane.width as f64, self.plane.height as f64), 3u8), 
             (Point::new(self.plane.height as f64, 0.), 4u8)];
             
-        let mut closest_points: Vec<(u8, Point)> = corners.par_iter().map(|i| (i.1, calc_dist_for_edge(i.0, points))).collect();
+        let mut closest_points: Vec<(u8, Point)> = corners.par_iter().map(|i| (i.1, calc_dist_to_edge(i.0, points))).collect();
         
         closest_points.sort_by(|k,p| k.0.partial_cmp(&p.0).unwrap());
         closest_points
