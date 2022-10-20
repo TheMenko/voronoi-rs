@@ -44,7 +44,6 @@ impl VoronoiBuilder {
             points.iter().reduce(|p,k| if p.euclidean_dist(edge) < k.euclidean_dist(edge) { p } else { k }).unwrap().to_owned()
         };
         
-        //let p = points.clone();
         let corners = [
             (Point::new(0., 0.), 1u8), 
             (Point::new(self.plane.width as f64, 0.), 2u8), 
@@ -53,6 +52,7 @@ impl VoronoiBuilder {
             
         let mut closest_points: Vec<(u8, Point)> = corners.par_iter().map(|i| (i.1, calc_dist_to_edge(i.0, points))).collect();
         
+        //todo: if all corners are closest to the same point, its safe to draw out/mark sites in the plane.
         closest_points.sort_by(|k,p| k.0.partial_cmp(&p.0).unwrap());
         closest_points
     }
