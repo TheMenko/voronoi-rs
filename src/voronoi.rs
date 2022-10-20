@@ -85,11 +85,11 @@ mod tests {
         
         let closest_points = vb.calc_for_edges()?;
         
-        // let a: Vec<()> = closest_points.iter().map(|p| println!("{:?}", p)).collect();
+        let a: Vec<()> = closest_points.iter().map(|p| println!("{:?}", p)).collect();
         
-        // assert_eq!(closest_points.get(0).unwrap(), &(1u8, Point::from_tpl(points[0])));
-        // assert_eq!(closest_points.get(1).unwrap(), &(2u8, Point::from_tpl(points[1])));
-        // assert_eq!(closest_points.get(2).unwrap(), &(3u8, Point::from_tpl(points[2])));
+        assert_eq!(closest_points.get(0).unwrap(), &(1u8, Point::from_tpl(points[0])));
+        assert_eq!(closest_points.get(1).unwrap(), &(2u8, Point::from_tpl(points[1])));
+        assert_eq!(closest_points.get(2).unwrap(), &(3u8, Point::from_tpl(points[2])));
         assert_eq!(closest_points.get(3).unwrap(), &(4u8, Point::from_tpl(points[3])));
         Ok(())
     }  
