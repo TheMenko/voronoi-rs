@@ -5,8 +5,8 @@ type Result<T> = std::result::Result<T, PlaneError>;
 
 #[derive(Debug, Clone, PartialEq, PartialOrd)]
 pub struct Plane {
-    width: u32,
-    height: u32,
+    pub width: u32,
+    pub height: u32,
     points: Option<Vec<Point>>
 }
 

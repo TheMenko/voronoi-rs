@@ -83,16 +83,8 @@ impl From<VoronoiError> for String {
 
 impl fmt::Display for VoronoiError {  
     fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
-        match *self {
+        match self {
             VoronoiError::Error(message, other) => f.write_str(&format!("{}. {}", message, other)),
-        }
-    }
-}
-
-impl StdError for VoronoiError {  
-    fn description(&self) -> &str {
-        match *self {
-            VoronoiError::Error(message, other) => &format!("{}. {}", message, other),
         }
     }
 }
